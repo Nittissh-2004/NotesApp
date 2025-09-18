@@ -2,10 +2,10 @@ import React, { useReducer, useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import AllNotes from "./Pages/AllNotes.jsx";
-import ArchivedNotes from "./pages/ArchivedNotes.jsx";
-import PinnedNotes from "./pages/PinnedNotes.jsx";
+import ArchivedNotes from "./Pages/ArchivedNotes.jsx";
+import PinnedNotes from "./Pages/PinnedNotes.jsx";
 import Trash from "./Pages/Trash.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import NotFound from "./Pages/NotFound.jsx";
 import { getNotes, saveNotes } from "./Utils/LocalStorage.js";
 
 const notesReducer = (state, action) => {
