@@ -1,63 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { loadNotes, saveNotes } from "../Utils/Storage";
-import NoteForm from "../components/NoteForm";
-import NoteCard from "../components/NoteCard";
-import SearchBar from "../components/SearchBar";
-import TagFilter from "../components/TagFilter";
+import React from "react";
+import NoteForm from "../Components/NoteForm";
+import NoteCard from "../Components/NoteCard";
+import SearchBar from "../Components/SearchBar";
+import TagSidebar from "../components/TagSidebar";
 
-function AllNotes() {
-  const [notes, setNotes] = useState([]);
-  const [search, setSearch] = useState("");
-  const [tagFilter, setTagFilter] = useState("");
-
-  useEffect(() => {
-    setNotes(loadNotes());
-  }, []);
-
-  useEffect(() => {
-    saveNotes(notes);
-  }, [notes]);
-
-  const addNote = (note) => setNotes([note, ...notes]);
-  const updateNote = (updatedNote) => setNotes(notes.map((n) => (n.id === updatedNote.id ? updatedNote : n)));
-  const deleteNote = (id) => setNotes(notes.map((n) => (n.id === id ? { ...n, isTrashed: true } : n)));
-
-  const filtered = notes.filter((n) =>
-    !n.isTrashed && !n.isArchived &&
-    n.title.toLowerCase().includes(search.toLowerCase()) &&
-    n.content.toLowerCase().includes(search.toLowerCase()) &&
-    (tagFilter === "" || n.tags.includes(tagFilter))
+const AllNotes = ({
+  notes,
+  dispatch,
+  setSearchTerm,
+  searchTerm,
+  tagFilter,
+  setTagFilter,
+}) => {
+  const filteredNotes = notes.filter(
+    (note) =>
+      (note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (!tagFilter || note.tags.includes(tagFilter)) &&
+      !note.archived &&
+      !note.trashed
   );
 
-  const pinned = filtered.filter(n => n.isPinned);
-  const others = filtered.filter(n => !n.isPinned);
+  const pinned = filteredNotes.filter((note) => note.pinned);
+  const others = filteredNotes.filter((note) => !note.pinned);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-900 to-blue-900 text-white flex justify-center items-start p-6">
-  <div className="w-full max-w-5xl bg-white text-black rounded-2xl shadow-2xl p-8">
-    <h5 className="text-4xl font-bold text-center text-purple-800 mb-6">📝 Notes App</h5>
+    <div className="bg-white grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-5 p-5">
+      <TagSidebar
+        notes={notes}
+        tagFilter={tagFilter}
+        setTagFilter={setTagFilter}
+      />
+      <div>
+        <SearchBar setSearchTerm={setSearchTerm} />
+        <NoteForm dispatch={dispatch} />
 
-    <NoteForm onAdd={addNote} />
-    <SearchBar search={search} setSearch={setSearch} />
-    <TagFilter notes={notes} setTagFilter={setTagFilter} />
+        <div className="mt-6">
+          {/* {pinned.length > 0 && (
+            <>
+              <h2 className="text-xl font-semibold mb-2">Pinned</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                {pinned.map(note => (
+                  <NoteCard key={note.id} note={note} dispatch={dispatch} />
+                ))}
+              </div>
+            </>
+          )} */}
 
-    <h2 className="text-2xl font-semibold mt-6 text-purple-700 flex items-center gap-2">📌 Pinned</h2>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-      {pinned.map((note) => (
-        <NoteCard key={note.id} note={note} onUpdate={updateNote} onDelete={deleteNote} />
-      ))}
+          <h2 className="text-xl font-semibold mb-2">All Notes</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {filteredNotes.map((note) => (
+              <NoteCard key={note.id} note={note} dispatch={dispatch} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-
-    <h2 className="text-2xl font-semibold mt-6 text-purple-700 flex items-center gap-2">🗂️ Others</h2>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-      {others.map((note) => (
-        <NoteCard key={note.id} note={note} onUpdate={updateNote} onDelete={deleteNote} />
-      ))}
-    </div>
-  </div>
-</div>
-
   );
-}
+};
 
 export default AllNotes;

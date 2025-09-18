@@ -1,13 +1,12 @@
 import React from "react";
-function SearchBar({ search, setSearch }) {
-  return (
-    <input
-      type="text"
-      placeholder="Search notes..."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      className="w-full p-2 border mb-4 rounded shadow"
-    />
-  );
-}
+
+const SearchBar = ({ setSearchTerm }) => (
+  <input
+    type="text"
+    className="w-full p-2 mb-4 border-2 border-orange-400 rounded"
+    placeholder="🔍 Search notes..."
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+);
+
 export default SearchBar;
