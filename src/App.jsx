@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import Navbar from "./Components/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 import AllNotes from "./Pages/AllNotes.jsx";
 import ArchivedNotes from "./pages/ArchivedNotes.jsx";
 import PinnedNotes from "./pages/PinnedNotes.jsx";

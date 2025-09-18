@@ -2,7 +2,7 @@ import React from "react";
 import NoteForm from "../Components/NoteForm";
 import NoteCard from "../Components/NoteCard";
 import SearchBar from "../Components/SearchBar";
-import TagSidebar from "../components/TagSidebar";
+import TagSidebar from "../Components/TagSidebar";
 
 const AllNotes = ({
   notes,
